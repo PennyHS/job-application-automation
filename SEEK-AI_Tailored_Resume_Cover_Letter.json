@@ -1,0 +1,804 @@
+{
+  "name": "SEEK-AI Tailored Resume  & Cover Letter",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -736,
+        -96
+      ],
+      "id": "7f4dd319-309d-4ae4-a397-2a1cc698ebf8",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM",
+          "mode": "list",
+          "cachedResultName": "2025/11/4 SEEK  Saved Job Sheets",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "detectAutomatically"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        144,
+        -96
+      ],
+      "id": "971e976b-0a4b-47b5-ba20-8eed3f4c18c2",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "qisYzWCXIvCk4v0u",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        384,
+        -96
+      ],
+      "id": "57c1df33-1387-4360-b3ff-cab761b8ef36",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.apify.com/v2/acts/apify~cheerio-scraper/runs?token=YOUR_APIFY_TOKEN&waitForFinish=120\n\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  {\n    \"startUrls\": [\n      { \"url\": $json[\"Job URL\"] }\n    ],\n    \"maxRequestsPerCrawl\": 1,\n    \"proxyConfiguration\": {\n      \"useApifyProxy\": true,\n      \"apifyProxyGroups\": [\"RESIDENTIAL\"],\n      \"countryCode\": \"AU\"\n    },\n    \"pageFunction\": \"async function pageFunction(context) { const { $, request } = context; const title = $('h1[data-automation=\\\"job-detail-title\\\"]').text().trim() || $('h1').first().text().trim(); const company = $('[data-automation=\\\"advertiser-name\\\"]').text().trim(); const location = $('[data-automation=\\\"job-detail-location\\\"]').text().trim(); const description = $('[data-automation=\\\"jobAdDetails\\\"]').text().trim() || $('[data-automation=\\\"jobAdBody\\\"]').text().trim(); return { url: request.url, title, company, location, description }; }\"\n  }\n}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        -80
+      ],
+      "id": "2e6f0133-46a7-4d8d-96b8-5837d9048196",
+      "name": "Run Apify Actor"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items?clean=true&format=json&token=YOUR_APIFY_TOKEN\n\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        736,
+        -80
+      ],
+      "id": "34852de2-5e98-47f2-a038-0b95c90fa24e",
+      "name": "Fetch Dataset",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1hlLdMbO8TuWN-W6Q0QJ_elhYwcZnMRo_iBeP8fReTX4"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        -96
+      ],
+      "id": "be451b12-5f24-4a3b-b8f1-4844c2dddfde",
+      "name": "Read Master Resume",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "37qqfejeqjCiAjA5",
+          "name": "Google Docs account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1GoiRSmnVJkNpARoXdWoAQ_YnTcfsgtdQ30icVatRUZA"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        -96
+      ],
+      "id": "4e0ddd18-af24-474b-9156-89b3b0939c22",
+      "name": "Read Master Cover Letter",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "37qqfejeqjCiAjA5",
+          "name": "Google Docs account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.googleapis.com/drive/v3/files/{{ $('Read Master Resume').item.json.documentId }}/copy",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  JSON.stringify({\n    name: `Penny_Resume_${$('Fetch Dataset').item.json.company}_${$('Fetch Dataset').item.json.title}`,\n    parents: [\"1_jLx4XM08jQNOijdARRIZuYsic4RUPX9\"]\n  })\n}}\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1280,
+        -96
+      ],
+      "id": "4ca25b1d-83f4-4d43-88f0-400a78782a5a",
+      "name": "Copy Resume template",
+      "credentials": {
+        "gongOAuth2Api": {
+          "id": "Z7zS2mEpDyxNcm3y",
+          "name": "Gong account"
+        },
+        "googleOAuth2Api": {
+          "id": "nwHi2FJdFNwFBee1",
+          "name": "Google account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $json.newDocId }}:batchUpdate\n",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "requests",
+              "value": "={{ $json.requests }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1728,
+        -96
+      ],
+      "id": "04b2e0c9-4ea7-490d-805d-73b7cd35b90b",
+      "name": "Update Resume Content (Google Docs batchUpdate)",
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "nwHi2FJdFNwFBee1",
+          "name": "Google account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM",
+          "mode": "list",
+          "cachedResultName": "2025/11/4 SEEK  Saved Job Sheets",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Resume": "={{ $('Set resumeUrl').item.json.resumeUrl }}",
+            "Job Title": "={{ $('Get row(s) in sheet').item.json['Job Title'] }}",
+            "Cover Letter": "={{ $json.CoverLetterUrl }}"
+          },
+          "matchingColumns": [
+            "Job Title"
+          ],
+          "schema": [
+            {
+              "id": "Job Title",
+              "displayName": "Job Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Posted Date",
+              "displayName": "Posted Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job URL",
+              "displayName": "Job URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resume",
+              "displayName": "Resume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cover Letter",
+              "displayName": "Cover Letter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2144,
+        176
+      ],
+      "id": "d7d51fb6-4fc9-4bf9-be48-6d49d935ce0d",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "qisYzWCXIvCk4v0u",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "83d9ca5f-b784-4840-a776-0c0ab1e12e41",
+              "name": "newDocId",
+              "value": "={{ $('Resume-Parse AI JSON & Build Requests').item.json.newDocId }}",
+              "type": "string"
+            },
+            {
+              "id": "ae8f54c7-d213-457e-8ac3-443a85154772",
+              "name": "resumeUrl",
+              "value": "={{ \"https://docs.google.com/document/d/\" + $('Resume-Parse AI JSON & Build Requests').item.json.newDocId + \"/edit\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1952,
+        -96
+      ],
+      "id": "624030d8-357c-4f6f-b62f-207424485a2f",
+      "name": "Set resumeUrl"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a helpful intelligent resume and cover letter customisation assistant. Your style is honest, succinct, direct, and focus on essential information.",
+              "role": "system"
+            },
+            {
+              "content": "=You are an AI that rewrites and tailors resume content to match a specific job description.\n\nYour tasks:\n1. Improve clarity, impact, and professionalism of all bullet points.\n2. Tailor the language to highlight skills, tools, and responsibilities that match the job description.\n3. Keep content truthful — do not invent experience.\n4. Emphasize transferable skills that the job description values.\n5. Add relevant keywords from the job description where appropriate (Windows, M365, Intune, API, automation, cloud, troubleshooting, networking, service desk, stakeholder engagement, etc.).\n6. Each bullet should be 1 line if possible, max 2 lines.\n7. Begin each bullet with a strong verb.\n8. Output MUST be JSON only, following the structure below.\n9. DO NOT include comments, markdown, backticks, explanations, or additional text. JSON only.\n\nJOB DESCRIPTION:\n{{ $('Fetch Dataset').item.json.description }}\n\n-------------\n\nMY WORK EXPERIENCE:\n{{ $('Read work experiences').item.json.content }}\n\n-------------\n\nMY MASTER RESUME:\n{{ $('Read Master Resume').item.json.content }}\n\n-------------\n\nWhen generating the output:\n- Write a tailored version of my resume that highlights relevant experience and keywords.\n- Ensure the result is natural, professional, and ATS-friendly.\n- Do not invent experience. Only rewrite and tailor.\n- Every field must have content. If one area has no direct match, write a general transferable bullet.\n\nYour output must be VALID JSON in this exact structure:\n\n{\n  \"SUMMARY\": \"...\",\n  \"SKILL_1\": \"...\",\n  \"SKILL_2\": \"...\",\n  \"SKILL_3\": \"...\",\n  \"SKILL_4\": \"...\",\n  \"SKILL_5\": \"...\",\n  \"SKILL_6\": \"...\",\n  \"SKILL_7\": \"...\",\n  \"SKILL_8\": \"...\",\n  \"SKILL_9\": \"...\",\n  \"SKILL_10\": \"...\",\n\n  \"JOB1_TITLE\": \"...\",\n\n  \"JOB1_BULLET_1\": \"...\",\n  \"JOB1_BULLET_2\": \"...\",\n  \"JOB1_BULLET_3\": \"...\",\n  \"JOB1_BULLET_4\": \"...\",\n  \"JOB1_BULLET_5\": \"...\",\n\n  \"JOB2_BULLET_1\": \"...\",\n  \"JOB2_BULLET_2\": \"...\",\n  \"JOB2_BULLET_3\": \"...\",\n  \"JOB2_BULLET_4\": \"...\",\n  \"JOB2_BULLET_5\": \"...\",\n\n  \"JOB3_BULLET_1\": \"...\",\n  \"JOB3_BULLET_2\": \"...\",\n  \"JOB3_BULLET_3\": \"...\",\n  \"JOB3_BULLET_4\": \"...\",\n\n  \"JOB4_BULLET_1\": \"...\",\n  \"JOB4_BULLET_2\": \"...\",\n  \"JOB4_BULLET_3\": \"...\",\n\n  \"JOB5_BULLET_1\": \"...\",\n  \"JOB5_BULLET_2\": \"...\",\n  \"JOB5_BULLET_3\": \"...\"\n}\n\nONLY output JSON. Nothing else."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        928,
+        -96
+      ],
+      "id": "9ef88b04-4be7-4a1c-97bc-bbe24a0ea353",
+      "name": "Tailored Resume",
+      "credentials": {
+        "openAiApi": {
+          "id": "aGe7WsIzDTSuTB7o",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a helpful intelligent resume and cover letter customisation assistant. Your style is honest, succinct, direct, and focus on essential information."
+            },
+            {
+              "content": "=You generate professional, technical cover letters in the following style and structure.\n\nSTYLE REQUIREMENTS (MANDATORY):\n- 4 full paragraphs + 1 short closing sentence.\n- No bullet points.\n- Clear, confident, technical tone.\n- 3–4 sentences per paragraph.\n- Focus on real IT experience: troubleshooting, automation, system support, cloud, backend, scripting, customer-facing environments.\n- Avoid exaggeration, clichés, and overly emotional language.\n- No Markdown, no headings. Start immediately with “Dear Hiring Manager,”.\n- No storytelling. Keep each paragraph factual, clean, and impact-based.\n\nSTRUCTURE (MANDATORY):\n\nP1 — INTRO:\n- Begin with: “I am ”\n- Express interest in the role and company\n- State highest qualification (Master’s in IT, QUT)\n- Summarize 2–3 relevant strengths (IT support, automation, backend, cloud)\n- Tone: confident, concise\n\nP2 — CURRENT ROLE:\n- Describe the applicant’s current or most recent technical responsibilities\n- Include cloud work, Windows environment management, M365, API integrations, automation, system monitoring, documentation\n- Show ability to diagnose and maintain stable environments\n\nP3 — PREVIOUS EXPERIENCE:\n- Summarize 1–2 past roles and key achievements\n- Mention development, automation, troubleshooting, performance optimization\n- Mention large-scale data handling, stakeholder communication, system improvement\n\nP4 — WHY THIS COMPANY:\n- Explain why the company’s culture, values, or mission aligns with the applicant\n- Show understanding of their focus (e.g., client satisfaction, collaboration, technical excellence)\n- Keep tone positive but professional\n\nCLOSING — FINAL SENTENCE:\n- Simple and respectful\n- 2 sentence max\n- E.g., “Thank you for considering my application; I look forward to the opportunity to contribute to your team.”\n\nOUTPUT FORMAT (MANDATORY):\nReturn ONLY valid JSON with the following keys:\n\n{\n  \"P1\": \"\",\n  \"P2\": \"\",\n  \"P3\": \"\",\n  \"P4\": \"\",\n  \"CLOSING\": \"\"\n}\n\nTailor all paragraphs to the job description and company information below.\n\nJOB DESCRIPTION:\n{{ $('Fetch Dataset').item.json.description }}\n\nROLE TITLE:\n{{ $('Fetch Dataset').item.json.title }}\n\nCOMPANY:\n{{ $('Fetch Dataset').item.json.company }}\n\nThe output must be a valid JSON object with no extra text.\n",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        944,
+        176
+      ],
+      "id": "10d7897b-7820-437f-833a-9c61ef6112e8",
+      "name": "Tailored Cover letter",
+      "credentials": {
+        "openAiApi": {
+          "id": "aGe7WsIzDTSuTB7o",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.googleapis.com/drive/v3/files/{{ $('Read Master Cover Letter').item.json.documentId }}/copy",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  JSON.stringify({\n    name: `Penny_Cover_Letter_${$('Fetch Dataset').item.json.company}_${$('Fetch Dataset').item.json.title}`,\n    parents: [\"1_jLx4XM08jQNOijdARRIZuYsic4RUPX9\"]\n  })\n}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1296,
+        176
+      ],
+      "id": "2ec3be80-934c-4e9b-9cd2-f51ea6027e58",
+      "name": "Copy Cover Letter Template",
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "nwHi2FJdFNwFBee1",
+          "name": "Google account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Get the model's JSON text\nconst txt = $('Tailored Resume').item.json.message.content;\n\n// Safely extract the first {...} block if the model added extra text\nfunction extractFirstJson(s) {\n  const start = s.indexOf('{');\n  const end = s.lastIndexOf('}');\n  if (start === -1 || end === -1 || end <= start) {\n    throw new Error('No JSON object found in model output');\n  }\n  return s.slice(start, end + 1);\n}\n\nlet obj;\ntry {\n  obj = JSON.parse(txt);\n} catch {\n  obj = JSON.parse(extractFirstJson(txt));\n}\n\n// Build replaceAllText requests from keys\nconst requests = [];\nfor (const [k, v] of Object.entries(obj)) {\n  if (v === undefined || v === null) continue;\n  requests.push({\n    replaceAllText: {\n      containsText: { text: `{{${k}}}`, matchCase: true },\n      replaceText: String(v),\n    },\n  });\n}\n\n// Pass the new Doc ID from the Copy node (current item)\nconst newDocId = $json.id; // or $('Copy').item.json.id if needed\n\nreturn {\n  json: { newDocId, requests },\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        -96
+      ],
+      "id": "18a7cb55-fa46-4f0b-902f-09bcbeefc015",
+      "name": "Resume-Parse AI JSON & Build Requests"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// --- 1) Get the model's JSON text from the Tailored Cover Letter model node\nconst txt = $node[\"Tailored Cover letter\"].json.message.content;\n\n// --- 2) Extract JSON even if the model added text around it\nfunction extractFirstJson(s) {\n  const start = s.indexOf(\"{\");\n  const end = s.lastIndexOf(\"}\");\n  if (start === -1 || end === -1 || end <= start) {\n    throw new Error(\"No JSON object found in model output\");\n  }\n  return s.slice(start, end + 1);\n}\n\nlet obj;\ntry {\n  obj = JSON.parse(txt);\n} catch {\n  obj = JSON.parse(extractFirstJson(txt));\n}\n\n// --- 3) Keys from the AI-generated JSON\nconst KEYS = [\"P1\", \"P2\", \"P3\", \"P4\", \"CLOSING\"];\n\n// --- 4) Build replaceAllText requests\nconst requests = [];\n\n// ✅ Add COMPANY\nrequests.push({\n  replaceAllText: {\n    containsText: { text: \"{{COMPANY}}\", matchCase: true },\n    replaceText: String($node[\"Fetch Dataset\"].json.company || \"\")\n  }\n});\n\n// ✅ Add LOCATION\nrequests.push({\n  replaceAllText: {\n    containsText: { text: \"{{LOCATION}}\", matchCase: true },\n    replaceText: String($node[\"Fetch Dataset\"].json.location || \"\")\n  }\n});\n\n// ✅ Add P1–P4 + CLOSING paragraphs\nfor (const k of KEYS) {\n  const v = obj[k];\n  if (v === undefined || v === null) continue;\n\n  requests.push({\n    replaceAllText: {\n      containsText: { text: `{{${k}}}`, matchCase: true },\n      replaceText: String(v)\n    }\n  });\n}\n\n// --- 5) Get newDocId from Copy Cover Letter Template node\nlet newDocId;\ntry {\n  newDocId = $node[\"Copy Cover Letter Template\"].json.id;\n} catch (e) {\n  newDocId = $json.id;\n}\n\nif (!newDocId) {\n  throw new Error(\"newDocId missing — ensure Copy Cover Letter Template runs before this node\");\n}\n\n// --- 6) Return final JSON for Google Docs batchUpdate\nreturn {\n  json: { newDocId, requests }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        176
+      ],
+      "id": "0113abfb-bb0c-4d17-96d5-333bd07cbc0b",
+      "name": "Cover Letter-Parse AI JSON & Build Requests"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $('Copy Cover Letter Template').item.json.id }}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleOAuth2Api",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "requests",
+              "value": "={{ $json.requests }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1712,
+        176
+      ],
+      "id": "1b9fe009-7be5-47c5-bb4a-e9ea986e968f",
+      "name": "Update Cover Letter Content (Google Docs batchUpdate)",
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "nwHi2FJdFNwFBee1",
+          "name": "Google account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23c3e2ef-6a44-455f-8fb7-d32539c6b1f1",
+              "name": "newDocId",
+              "value": "={{ $('Copy Cover Letter Template').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a764a5b6-f5bd-44f3-b1d7-ba61bbea804a",
+              "name": "CoverLetterUrl",
+              "value": "={{ '=HYPERLINK(\"https://docs.google.com/document/d/' + $('Cover Letter-Parse AI JSON & Build Requests').item.json.newDocId + '/edit\",\"Cover Letter\")' }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        176
+      ],
+      "id": "196fc00d-4ff8-4679-bbd9-dbc869269cb8",
+      "name": "set cover letter url"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "169xtQDglhOhzdZvg2C9rKlyTjpO-Fn0USZTE8_gMlJI"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -96
+      ],
+      "id": "c37ed732-9884-44fe-90c7-b912c730093d",
+      "name": "Read work experiences",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "37qqfejeqjCiAjA5",
+          "name": "Google Docs account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read Master Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Run Apify Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Apify Actor": {
+      "main": [
+        [
+          {
+            "node": "Fetch Dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Dataset": {
+      "main": [
+        [
+          {
+            "node": "Tailored Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Master Resume": {
+      "main": [
+        [
+          {
+            "node": "Read Master Cover Letter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Master Cover Letter": {
+      "main": [
+        [
+          {
+            "node": "Read work experiences",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Resume template": {
+      "main": [
+        [
+          {
+            "node": "Resume-Parse AI JSON & Build Requests",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Resume Content (Google Docs batchUpdate)": {
+      "main": [
+        [
+          {
+            "node": "Set resumeUrl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set resumeUrl": {
+      "main": [
+        [
+          {
+            "node": "Tailored Cover letter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tailored Resume": {
+      "main": [
+        [
+          {
+            "node": "Copy Resume template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tailored Cover letter": {
+      "main": [
+        [
+          {
+            "node": "Copy Cover Letter Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Cover Letter Template": {
+      "main": [
+        [
+          {
+            "node": "Cover Letter-Parse AI JSON & Build Requests",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume-Parse AI JSON & Build Requests": {
+      "main": [
+        [
+          {
+            "node": "Update Resume Content (Google Docs batchUpdate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cover Letter-Parse AI JSON & Build Requests": {
+      "main": [
+        [
+          {
+            "node": "Update Cover Letter Content (Google Docs batchUpdate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Cover Letter Content (Google Docs batchUpdate)": {
+      "main": [
+        [
+          {
+            "node": "set cover letter url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set cover letter url": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read work experiences": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c32f35df-2813-45fc-840b-c8bc506cd8db",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fd63f22671c72f8d692d2658b1654d53af3e28d522d0f2eea9da17e4931afde6"
+  },
+  "id": "XRAPmMIJi0ldJubj",
+  "tags": []
+}
