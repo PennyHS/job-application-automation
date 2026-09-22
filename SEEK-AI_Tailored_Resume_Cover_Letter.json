@@ -16,17 +16,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "2025/11/4 SEEK  Saved Job Sheets",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
         },
         "options": {
           "dataLocationOnSheet": {
@@ -46,7 +46,7 @@
       "name": "Get row(s) in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "qisYzWCXIvCk4v0u",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "Google Sheets account"
         }
       }
@@ -114,7 +114,7 @@
     {
       "parameters": {
         "operation": "get",
-        "documentURL": "1hlLdMbO8TuWN-W6Q0QJ_elhYwcZnMRo_iBeP8fReTX4"
+        "documentURL": "YOUR_MASTER_RESUME_DOC_ID"
       },
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
@@ -126,7 +126,7 @@
       "name": "Read Master Resume",
       "credentials": {
         "googleDocsOAuth2Api": {
-          "id": "37qqfejeqjCiAjA5",
+          "id": "YOUR_GOOGLE_DOCS_CREDENTIAL_ID",
           "name": "Google Docs account 3"
         }
       }
@@ -134,7 +134,7 @@
     {
       "parameters": {
         "operation": "get",
-        "documentURL": "1GoiRSmnVJkNpARoXdWoAQ_YnTcfsgtdQ30icVatRUZA"
+        "documentURL": "YOUR_MASTER_COVER_LETTER_DOC_ID"
       },
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
@@ -146,7 +146,7 @@
       "name": "Read Master Cover Letter",
       "credentials": {
         "googleDocsOAuth2Api": {
-          "id": "37qqfejeqjCiAjA5",
+          "id": "YOUR_GOOGLE_DOCS_CREDENTIAL_ID",
           "name": "Google Docs account 3"
         }
       }
@@ -162,7 +162,7 @@
         "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{\n  JSON.stringify({\n    name: `Penny_Resume_${$('Fetch Dataset').item.json.company}_${$('Fetch Dataset').item.json.title}`,\n    parents: [\"1_jLx4XM08jQNOijdARRIZuYsic4RUPX9\"]\n  })\n}}\n\n\n",
+        "jsonBody": "={{\n  JSON.stringify({\n    name: `Penny_Resume_${$('Fetch Dataset').item.json.company}_${$('Fetch Dataset').item.json.title}`,\n    parents: [\"YOUR_DRIVE_FOLDER_ID\"]\n  })\n}}\n\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -175,11 +175,11 @@
       "name": "Copy Resume template",
       "credentials": {
         "gongOAuth2Api": {
-          "id": "Z7zS2mEpDyxNcm3y",
+          "id": "YOUR_UNUSED_CREDENTIAL_ID",
           "name": "Gong account"
         },
         "googleOAuth2Api": {
-          "id": "nwHi2FJdFNwFBee1",
+          "id": "YOUR_GOOGLE_ACCOUNT_CREDENTIAL_ID",
           "name": "Google account"
         }
       }
@@ -211,7 +211,7 @@
       "name": "Update Resume Content (Google Docs batchUpdate)",
       "credentials": {
         "googleOAuth2Api": {
-          "id": "nwHi2FJdFNwFBee1",
+          "id": "YOUR_GOOGLE_ACCOUNT_CREDENTIAL_ID",
           "name": "Google account"
         }
       }
@@ -221,17 +221,17 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "2025/11/4 SEEK  Saved Job Sheets",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1z9oA4y5HXldRUukfmVeHMPd2h6166fDwmEtVReOakKM/edit#gid=0"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -336,7 +336,7 @@
       "name": "Update row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "qisYzWCXIvCk4v0u",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "Google Sheets account"
         }
       }
@@ -403,7 +403,7 @@
       "name": "Tailored Resume",
       "credentials": {
         "openAiApi": {
-          "id": "aGe7WsIzDTSuTB7o",
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
           "name": "OpenAi account 2"
         }
       }
@@ -439,7 +439,7 @@
       "name": "Tailored Cover letter",
       "credentials": {
         "openAiApi": {
-          "id": "aGe7WsIzDTSuTB7o",
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
           "name": "OpenAi account 2"
         }
       }
@@ -455,7 +455,7 @@
         "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{\n  JSON.stringify({\n    name: `Penny_Cover_Letter_${$('Fetch Dataset').item.json.company}_${$('Fetch Dataset').item.json.title}`,\n    parents: [\"1_jLx4XM08jQNOijdARRIZuYsic4RUPX9\"]\n  })\n}}\n",
+        "jsonBody": "={{\n  JSON.stringify({\n    name: `Penny_Cover_Letter_${$('Fetch Dataset').item.json.company}_${$('Fetch Dataset').item.json.title}`,\n    parents: [\"YOUR_DRIVE_FOLDER_ID\"]\n  })\n}}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -468,7 +468,7 @@
       "name": "Copy Cover Letter Template",
       "credentials": {
         "googleOAuth2Api": {
-          "id": "nwHi2FJdFNwFBee1",
+          "id": "YOUR_GOOGLE_ACCOUNT_CREDENTIAL_ID",
           "name": "Google account"
         }
       }
@@ -528,7 +528,7 @@
       "name": "Update Cover Letter Content (Google Docs batchUpdate)",
       "credentials": {
         "googleOAuth2Api": {
-          "id": "nwHi2FJdFNwFBee1",
+          "id": "YOUR_GOOGLE_ACCOUNT_CREDENTIAL_ID",
           "name": "Google account"
         }
       }
@@ -565,7 +565,7 @@
     {
       "parameters": {
         "operation": "get",
-        "documentURL": "169xtQDglhOhzdZvg2C9rKlyTjpO-Fn0USZTE8_gMlJI"
+        "documentURL": "YOUR_WORK_EXPERIENCE_DOC_ID"
       },
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
@@ -577,7 +577,7 @@
       "name": "Read work experiences",
       "credentials": {
         "googleDocsOAuth2Api": {
-          "id": "37qqfejeqjCiAjA5",
+          "id": "YOUR_GOOGLE_DOCS_CREDENTIAL_ID",
           "name": "Google Docs account 3"
         }
       }
@@ -797,8 +797,8 @@
   "versionId": "c32f35df-2813-45fc-840b-c8bc506cd8db",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "fd63f22671c72f8d692d2658b1654d53af3e28d522d0f2eea9da17e4931afde6"
+    "instanceId": "YOUR_N8N_INSTANCE_ID"
   },
-  "id": "XRAPmMIJi0ldJubj",
+  "id": "YOUR_WORKFLOW_ID",
   "tags": []
 }
